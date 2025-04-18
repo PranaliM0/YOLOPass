@@ -1,0 +1,11 @@
+# Ignore node_modules and Rails temp files
+node_modules/
+log/*
+tmp/*
+*.sqlite3
+db/*.sqlite3
+.env
+.bundle
+.DS_Store
+yolopass-backend/.env
+yolopass-frontend/.env
