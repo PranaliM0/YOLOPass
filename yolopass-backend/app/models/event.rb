@@ -5,4 +5,11 @@ class Event < ApplicationRecord
   enum status: { open: 0, closed: 1 }
 
   validates :name, :venue, :start_time, :end_time, :category, :status, presence: true
+
+  # Set default status to 'open' if not provided
+  after_initialize :set_default_status, if: :new_record?
+
+  def set_default_status
+    self.status ||= :open
+  end
 end
