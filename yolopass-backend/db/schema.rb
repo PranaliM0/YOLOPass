@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_18_065812) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_22_084148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,7 +36,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_065812) do
     t.integer "category"
     t.string "subcategory"
     t.decimal "price"
-    t.decimal "early_bird_price"
+    t.integer "early_bird_discount"
     t.datetime "early_bird_deadline"
     t.integer "max_participants"
     t.boolean "id_proof_required"
