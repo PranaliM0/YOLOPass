@@ -1,0 +1,58 @@
+.organizer-profile-container {
+    padding: 2rem;
+    font-family: Arial;
+    position: relative;
+  }
+  
+  .logout-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+    background-color: #f44336;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .profile-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 2rem;
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .profile-left {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+  }
+  
+  .profile-right {
+    flex: 1;
+    padding: 1rem;
+    border-left: 2px solid #ddd;
+  }
+  
+  button {
+    margin-top: 1rem;
+    padding: 8px 14px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
