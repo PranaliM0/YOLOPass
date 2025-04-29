@@ -1,6 +1,7 @@
 # app/controllers/organizer/organizers_controller.rb
 class Organizer::OrganizersController < ApplicationController
   before_action :authenticate_user
+  # before_action :authorize_organizer
 
   def profile
     if @current_user.role == "organizer"

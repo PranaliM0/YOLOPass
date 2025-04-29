@@ -1,9 +1,39 @@
 class Admin::UsersController < ApplicationController
+  before_action :authenticate_user
   before_action :authorize_admin
 
   def index
     users = User.all
     render json: users
+  end
+ 
+  # GET /admin/event_registrations
+  def event_registrations
+    events = Event.includes(:registrations => :user).map do |event|
+      {
+        id: event.id,
+        name: event.name,
+        users: event.registrations.map do |registration|
+          {
+            id: registration.user.id,
+            name: registration.user.name,
+            email: registration.user.email
+          }
+        end
+      }
+    end
+
+    render json: events
+  end
+
+   # GET /admin/unregistered_users
+   def unregistered_users
+    registered_user_ids = Registration.select(:user_id).distinct.pluck(:user_id)
+
+    users = User.where(role: 'attendee') # Assuming role = 'attendee'
+                .where.not(id: registered_user_ids)
+
+    render json: users.select(:id, :name, :email)
   end
 
   #cannot delete admin
@@ -20,19 +50,6 @@ class Admin::UsersController < ApplicationController
   
 
   private
-
-  def authorize_admin
-    header = request.headers['Authorization']
-    token = header.split(' ').last if header
-    decoded = decode_token(token)
-    @current_user = User.find(decoded[:user_id]) if decoded
-
-    unless @current_user&.admin?
-      render json: { error: 'Unauthorized' }, status: :unauthorized
-    end
-  rescue
-    render json: { error: 'Invalid token or not authorized' }, status: :unauthorized
-  end
 
   def organizers
     organizers = User.where(role: 'organizer').includes(organizer: :events)

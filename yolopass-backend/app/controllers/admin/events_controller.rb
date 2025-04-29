@@ -1,4 +1,5 @@
 class Admin::EventsController < ApplicationController
+  before_action :authenticate_user
   before_action :authorize_admin
 
   # GET /admin/events
@@ -13,33 +14,22 @@ class Admin::EventsController < ApplicationController
         start_time: event.start_time,
         status: event.status,
         organizer: {
-          id: event.organizer.user.id,
-          name: event.organizer.user.name,
-          email: event.organizer.user.email
+          id: event.organizer.id,
+          name: event.organizer.name,
+          email: event.organizer.email
         }
       }
-    }
+    }, status: :ok
   end
 
   # DELETE /admin/events/:id
   def destroy
-    event = Event.find(params[:id])
-    event.destroy
-    render json: { message: "Event deleted successfully" }
-  end
-
-  private
-
-  def authorize_admin
-    header = request.headers['Authorization']
-    token = header.split(' ').last if header
-    decoded = decode_token(token)
-    @current_user = User.find(decoded[:user_id]) if decoded
-
-    unless @current_user&.admin?
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+    event = Event.find_by(id: params[:id])
+    if event
+      event.destroy
+      render json: { message: "Event deleted successfully" }, status: :ok
+    else
+      render json: { error: "Event not found" }, status: :not_found
     end
-  rescue
-    render json: { error: 'Invalid token or not authorized' }, status: :unauthorized
   end
 end
