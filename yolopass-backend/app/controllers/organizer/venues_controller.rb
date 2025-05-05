@@ -9,7 +9,7 @@ class Organizer::VenuesController < ApplicationController
     end_time = params[:end_time]
 
     if start_time.blank? || end_time.blank?
-      return render json: { error: "Start time and end time are required" }, status: :bad_request
+      return render json: { error: t('organizer.venues.available.time_required') }, status: :bad_request
     end
 
     # Find venues that are occupied during the requested time

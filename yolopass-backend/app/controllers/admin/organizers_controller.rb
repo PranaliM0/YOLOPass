@@ -15,9 +15,9 @@ module Admin
       if organizer
         organizer.events.destroy_all   # delete events first
         organizer.destroy              # then delete organizer
-        render json: { message: "Organizer and their events deleted successfully" }, status: :ok
+        render json: { message: t('admin.organizers.destroy.success') }, status: :ok
       else
-        render json: { error: "Organizer not found" }, status: :not_found
+        render json: { error: t('admin.organizers.destroy.not_found') }, status: :not_found
       end
     end    
   end

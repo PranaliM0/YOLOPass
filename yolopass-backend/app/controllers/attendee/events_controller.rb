@@ -20,6 +20,6 @@ class Attendee::EventsController < ApplicationController
       discount_codes: discount_codes.as_json
     }
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Event not found' }, status: :not_found
+    render json: { error: t('attendees.events.show.event_not_found') }, status: :not_found
   end
 end

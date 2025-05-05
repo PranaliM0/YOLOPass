@@ -5,7 +5,7 @@ class Attendee::RegistrationsController < ApplicationController
 
   def create
     unless @event
-      render json: { error: "Event not found" }, status: :not_found
+      render json: { error: t('attendee.registartions.create.event_not_found') }, status: :not_found
       return
     end
 
@@ -17,7 +17,7 @@ class Attendee::RegistrationsController < ApplicationController
     discount_code = DiscountCode.find_by(code: discount_code_param) if discount_code_param.present?
 
     if discount_code_param.present? && discount_code.nil?
-      render json: { error: "Invalid discount code" }, status: :unprocessable_entity
+      render json: { error: t('attendee.registartions.create.invalid_discount_code') }, status: :unprocessable_entity
       return
     end
 
@@ -94,7 +94,7 @@ class Attendee::RegistrationsController < ApplicationController
       end
     }
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Registration not found' }, status: :not_found
+    render json: { error: t('attendee.registartions.show.registration_not_found') }, status: :not_found
   end
 
   private
@@ -110,7 +110,7 @@ class Attendee::RegistrationsController < ApplicationController
     event_id = params.dig(:registration, :event_id)
     @event = Event.find_by(id: event_id)
     unless @event
-      render json: { error: "Event not found" }, status: :not_found
+      render json: { error: t('attendee.registartions.set.event_not_found') }, status: :not_found
     end
   end
 end

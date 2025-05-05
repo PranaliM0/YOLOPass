@@ -23,7 +23,7 @@ class Organizer::EventsController < ApplicationController
     if @event
       render json: @event
     else
-      render json: { error: 'Event not found' }, status: :not_found
+      render json: { error: t('organizer.events.event_details.not_found') }, status: :not_found
     end
   end
 
@@ -52,7 +52,7 @@ class Organizer::EventsController < ApplicationController
     if @event.destroy
       head :no_content
     else
-      render json: { errors: 'Event deletion failed' }, status: :unprocessable_entity
+      render json: { errors: t('organizer.events.destroy.not_deleted') }, status: :unprocessable_entity
     end
   end
 

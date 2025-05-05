@@ -22,7 +22,7 @@ class Organizer::OrganizersController < ApplicationController
         summary: summary
       }
     else
-      render json: { error: "Not authorized" }, status: :unauthorized
+      render json: { error: t('organizer.organizers.profile.not_authorized') }, status: :unauthorized
     end
   end
 end

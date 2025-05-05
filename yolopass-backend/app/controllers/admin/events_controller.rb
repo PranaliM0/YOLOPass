@@ -5,31 +5,17 @@ class Admin::EventsController < ApplicationController
   # GET /admin/events
   def index
     events = Event.includes(:organizer).all
-    render json: events.map { |event|
-      {
-        id: event.id,
-        name: event.name,
-        venue: event.venue,
-        category: event.category,
-        start_time: event.start_time,
-        status: event.status,
-        organizer: {
-          id: event.organizer.id,
-          name: event.organizer.name,
-          email: event.organizer.email
-        }
-      }
-    }, status: :ok
+    render json: events, each_serializer: EventSerializer, status: :ok
   end
-
+  
   # DELETE /admin/events/:id
   def destroy
     event = Event.find_by(id: params[:id])
     if event
       event.destroy
-      render json: { message: "Event deleted successfully" }, status: :ok
+      render json: { message: t('admin.events.destroy.success') }, status: :ok
     else
-      render json: { error: "Event not found" }, status: :not_found
+      render json: { error: t('admin.events.destroy.not_found') }, status: :not_found
     end
   end
 end

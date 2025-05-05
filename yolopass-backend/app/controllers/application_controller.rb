@@ -1,68 +1,43 @@
 class ApplicationController < ActionController::API
   include Rails.application.routes.url_helpers
-  rescue_from CanCan::AccessDenied do |exception|
-    render json: { error: 'Access Denied' }, status: :forbidden
+
+  rescue_from CanCan::AccessDenied do |_exception|
+    render json: { error: I18n.t('application.access_denied') }, status: :forbidden
   end
 
-  # Method to decode the token and authenticate the user
   def authenticate_user
     token = request.headers['Authorization']&.split(' ')&.last
     decoded_token = decode_token(token)
-  
+
     if decoded_token
       @current_user = User.find_by(id: decoded_token[:user_id])
+      unless @current_user
+        render json: { message: I18n.t('application.auth.unauthorized') }, status: :unauthorized
+      end
     else
-      render json: { message: 'Unauthorized' }, status: :unauthorized
+      render json: { message: I18n.t('application.auth.unauthorized') }, status: :unauthorized
     end
   end
-  #authorize admin
+
   def authorize_admin
-    header = request.headers['Authorization']
-    token = header.split(' ').last if header
-    decoded = decode_token(token)
-  
-    if decoded && decoded[:user_id]
-      @current_user = User.find_by(id: decoded[:user_id])
-    end
-  
+    authenticate_user and return if performed?
+
     unless @current_user&.admin?
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: I18n.t('application.auth.unauthorized') }, status: :unauthorized
     end
   rescue => e
-    render json: { error: 'Invalid token or not authorized' }, status: :unauthorized
+    render json: { error: I18n.t('application.auth.invalid_token') }, status: :unauthorized
   end
-  
 
-  #authorize attendee
   def authorize_attendee
-    header = request.headers['Authorization']
-    token = header.split(' ').last if header
-    decoded = decode_token(token)
-  
-    if decoded && decoded[:user_id]
-      @current_user = User.find_by(id: decoded[:user_id])
-    end
-  
+    authenticate_user and return if performed?
+
     unless @current_user&.attendee?
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: I18n.t('application.auth.unauthorized') }, status: :unauthorized
     end
   rescue => e
-    render json: { error: 'Invalid token or not authorized' }, status: :unauthorized
+    render json: { error: I18n.t('application.auth.invalid_token') }, status: :unauthorized
   end
-  
-  #authorize user
-  # def authorize_organizer
-  #   header = request.headers['Authorization']
-  #   token = header.split(' ').last if header
-  #   decoded =decode_token(token)
-  #   @current_user = User.find_by(decoded[:user_id]) if decoded
-
-  #   unless @current_user.organizer
-  #     render json: { error: 'Unauthorized' }, status: :unauthorized
-  #   end
-  # rescue
-  #   render json: { error: 'Invalid token or not authorized' }, status: :unauthorized
-  # end
 
   private
 
@@ -75,4 +50,3 @@ class ApplicationController < ActionController::API
     end
   end
 end
-

@@ -4,15 +4,15 @@ class SessionsController < ApplicationController
     # Find user by email
     @user = User.find_by(email: params[:email])
 
-    # Check if user exists and password is correct
     if @user && @user.authenticate(params[:password])
       # If authentication is successful, generate a JWT token
       token = encode_token({ user_id: @user.id })
-
       # Include the user's role in the response
-      render json: { message: 'Login successful', token: token, role: @user.role }, status: :ok
+      render json: { message: I18n.t('sessions.login_success'), token: token, role: @user.role }, status: :ok
     else
-      render json: { message: 'Invalid email or password' }, status: :unauthorized
+      # Log the failed attempt for debugging
+      Rails.logger.warn("Failed login attempt for #{params[:email]}")
+      render json: { message: I18n.t('sessions.invalid_credentials') }, status: :unauthorized
     end
   end
 

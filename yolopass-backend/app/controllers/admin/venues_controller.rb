@@ -19,7 +19,7 @@ class Admin::VenuesController < ApplicationController
     if venue.save
       render json: venue, status: :created
     else
-      render json: { errors: venue.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: t('admin.venues.create.venue_not_created') }, status: :unprocessable_entity
     end
   end
     # PATCH/PUT /venues/:id
@@ -27,7 +27,7 @@ class Admin::VenuesController < ApplicationController
       if @venue.update(venue_params)
         render json: @venue
       else
-        render json: { errors: @venue.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: t('admin.venues.create.venue_not_updated') }, status: :unprocessable_entity
       end
     end
   

@@ -1,0 +1,21 @@
+en:
+  attendee:
+    attendees:
+      events_grouped_by_category:
+        event_not_found: "No open events available at the moment."
+      profile:
+        not_found: "No registered events found."
+    events:
+      show:
+        event_not_found: "events not found."
+    discount_codes:
+      index:
+        event_id_required: "Event ID is required."
+    registrations:
+      create:
+        event_not_found: "Event not found."
+        invalid_discount_code: "Invalid discount code."
+      show:
+        registration_not_found: "Registration not found."
+      set: 
+        event_not_found: "Event not found."
