@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 class RegistrationCart < ApplicationRecord
   belongs_to :user
-belongs_to :event
-belongs_to :registration
-belongs_to :discount_code, optional: true
-
+  belongs_to :event
+  belongs_to :registration
+  belongs_to :discount_code, optional: true
 
   enum payment_status: { pending: 'pending', completed: 'completed', cancelled: 'cancelled' }
 

@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Admin
   class OrganizersController < ApplicationController
-    before_action :authenticate_user
-    before_action :authorize_admin
+    load_and_authorize_resource
 
     # GET /admin/organizers
     def index
@@ -15,10 +16,10 @@ module Admin
       if organizer
         organizer.events.destroy_all   # delete events first
         organizer.destroy              # then delete organizer
-        render json: { message: t('admin.organizers.destroy.success') }, status: :ok
+        render json: { message: I18n.t('admin.organizers.destroy.success') }, status: :ok
       else
-        render json: { error: t('admin.organizers.destroy.not_found') }, status: :not_found
+        render json: { error: I18n.t('admin.organizers.destroy.not_found') }, status: :not_found
       end
-    end    
+    end
   end
 end

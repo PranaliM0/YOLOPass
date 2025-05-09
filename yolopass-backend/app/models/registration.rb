@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Registration < ApplicationRecord
   belongs_to :user
   belongs_to :event
@@ -23,6 +25,7 @@ class Registration < ApplicationRecord
     calculate_amount_paid
     amount_paid
   end
+
   private
 
   def calculate_amount_paid
@@ -31,29 +34,27 @@ class Registration < ApplicationRecord
                  else
                    event.price
                  end
-  
+
     Rails.logger.debug "Base price: #{base_price}, Event price: #{event.price}, Early bird price: #{event.early_bird_price}"
-  
-    total = base_price * (self.number_of_participants || 1)
-  
+
+    total = base_price * (number_of_participants || 1)
+
     Rails.logger.debug "Total before discount: #{total}"
-  
+
     # Apply discount if applicable
     if discount_code&.usable? && Time.current > (event.early_bird_deadline || Time.current - 1.day)
       Rails.logger.debug "Applying discount: #{discount_code.amount} #{discount_code.discount_type}"
-  
+
       if discount_code.discount_type == 'fixed'
-        total -= discount_code.amount if discount_code.amount.to_f > 0
-      elsif discount_code.discount_type == 'percent' && discount_code.amount.to_f > 0
+        total -= discount_code.amount if discount_code.amount.to_f.positive?
+      elsif discount_code.discount_type == 'percent' && discount_code.amount.to_f.positive?
         total -= total * (discount_code.amount / 100.0)
       end
     end
-  
+
     self.amount_paid = total.clamp(0, Float::INFINITY)
-    Rails.logger.debug "Final amount paid: #{self.amount_paid}"
+    Rails.logger.debug "Final amount paid: #{amount_paid}"
   end
-  
-  
 
   # Set default payment status if not provided
   def set_default_payment_status

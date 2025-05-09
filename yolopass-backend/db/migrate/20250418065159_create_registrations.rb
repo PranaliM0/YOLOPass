@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRegistrations < ActiveRecord::Migration[7.1]
   def change
     create_table :registrations do |t|
@@ -9,7 +11,7 @@ class CreateRegistrations < ActiveRecord::Migration[7.1]
       t.string :payment_method
       t.string :payment_status, null: false, default: 'pending'  # Default to 'pending'
       t.datetime :registered_at
-      t.references :payment, null: true, foreign_key: true  # Add reference to Payment (optional at first)
+      t.references :payment, null: true, foreign_key: true # Add reference to Payment (optional at first)
 
       t.timestamps
     end

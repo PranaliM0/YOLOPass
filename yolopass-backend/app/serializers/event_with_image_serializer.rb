@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EventWithImageSerializer < ActiveModel::Serializer
   attributes :id, :name, :venue, :category, :price, :start_time, :status, :image_url
 

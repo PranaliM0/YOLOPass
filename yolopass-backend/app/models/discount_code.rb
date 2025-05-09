@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class DiscountCode < ApplicationRecord
   belongs_to :event
 
-  validates :code, presence: true
-  validates :discount_type, inclusion: { in: ["percentage", "fixed"] }
+  validates :code, presence: true, uniqueness: { scope: :event_id, message: "Code must be unique per event" }
+  validates :discount_type, inclusion: { in: %w[percentage fixed] }
   validates :amount, numericality: { greater_than: 0 }
   validates :max_uses, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates_uniqueness_of :code, scope: :event_id, message: 'has already been taken for this event'
@@ -29,24 +31,26 @@ class DiscountCode < ApplicationRecord
 
   def valid_for_early_bird?
     return false unless event.early_bird_deadline
+
     Time.current < event.early_bird_deadline
   end
 
   def valid_for_event?(event)
-    self.event_id == event.id && self.expires_at > Time.now && self.times_used < self.max_uses
+    event_id == event.id && expires_at > Time.now && times_used < max_uses
   end
 
   def use!
     return if expired? || (max_uses.present? && times_used >= max_uses)
+
     increment!(:times_used)
   end
 
   # ✅ Add these two predicate methods
   def percentage?
-    discount_type == "percentage"
+    discount_type == 'percentage'
   end
 
   def fixed?
-    discount_type == "fixed"
+    discount_type == 'fixed'
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameEarlyBirdPriceToDiscount < ActiveRecord::Migration[7.1]
   def up
     # If the column exists, rename it
