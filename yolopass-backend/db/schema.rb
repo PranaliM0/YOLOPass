@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_18_065812) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_29_114902) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "discount_codes", force: :cascade do |t|
     t.string "code", null: false
@@ -23,6 +51,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_065812) do
     t.integer "times_used", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "event_id"
     t.index ["code"], name: "index_discount_codes_on_code", unique: true
   end
 
@@ -36,7 +65,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_065812) do
     t.integer "category"
     t.string "subcategory"
     t.decimal "price"
-    t.decimal "early_bird_price"
+    t.integer "early_bird_discount"
     t.datetime "early_bird_deadline"
     t.integer "max_participants"
     t.boolean "id_proof_required"
@@ -58,6 +87,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_065812) do
     t.index ["registration_id"], name: "index_participants_on_registration_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.bigint "registration_id", null: false
+    t.integer "amount"
+    t.string "status"
+    t.string "transaction_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "payment_method"
+    t.index ["registration_id"], name: "index_payments_on_registration_id"
+  end
+
   create_table "receipts", force: :cascade do |t|
     t.bigint "registration_id", null: false
     t.string "receipt_number"
@@ -71,11 +111,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_065812) do
     t.index ["registration_id"], name: "index_receipts_on_registration_id"
   end
 
+  create_table "registration_carts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.integer "number_of_participants"
+    t.decimal "amount_paid"
+    t.string "payment_method"
+    t.string "payment_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "registration_id", null: false
+    t.index ["event_id"], name: "index_registration_carts_on_event_id"
+    t.index ["registration_id"], name: "index_registration_carts_on_registration_id"
+    t.index ["user_id"], name: "index_registration_carts_on_user_id"
+  end
+
   create_table "registrations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "event_id", null: false
     t.integer "number_of_participants"
-    t.bigint "discount_code_id", null: false
+    t.bigint "discount_code_id"
     t.decimal "amount_paid", precision: 10, scale: 2
     t.string "payment_method"
     t.string "payment_status", null: false
@@ -96,9 +151,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_065812) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "venues", force: :cascade do |t|
+    t.string "name"
+    t.string "location"
+    t.integer "capacity"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "events", "users"
   add_foreign_key "participants", "registrations"
+  add_foreign_key "payments", "registrations"
   add_foreign_key "receipts", "registrations"
+  add_foreign_key "registration_carts", "events"
+  add_foreign_key "registration_carts", "registrations"
+  add_foreign_key "registration_carts", "users"
   add_foreign_key "registrations", "discount_codes"
   add_foreign_key "registrations", "events"
   add_foreign_key "registrations", "users"

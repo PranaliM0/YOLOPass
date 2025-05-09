@@ -1,0 +1,6 @@
+en:
+  application:
+    access_denied: "Access Denied"
+    auth:
+      unauthorized: "Unauthorized"
+      invalid_token: "Invalid token or not authorized"

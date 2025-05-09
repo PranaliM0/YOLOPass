@@ -1,0 +1,19 @@
+en:
+  admin:
+    organizers:
+      destroy:
+        success: "Organizer and their events deleted successfully"
+        not_found: "Organizer not found"
+    events:
+      destroy:
+        success: "Event deleted successfully"
+        not_found: "Event not found"
+    users:
+      destroy:
+        success: "User deleted successfully"
+        cannot_delete_admin: "Cannot delete an admin"
+    venues:
+      create:
+        venue_not_created: "Venue not created successfully"
+      update:
+        venue_not_updated: "Venue not updated successfully"
