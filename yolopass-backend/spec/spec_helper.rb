@@ -17,6 +17,13 @@ require 'support/controller_helpers'
 # In spec/rails_helper.rb or spec/spec_helper.rb
 require 'json_web_token'
 
+require 'simplecov'
+SimpleCov.start 'rails' do
+  add_filter '/spec/'  # Exclude test files themselves from coverage
+end
+
+puts "SimpleCov started - generating code coverage report..."
+
 RSpec.configure do |config|
   config.include ControllerHelpers, type: :controller
   # rspec-expectations config goes here. You can use an alternate
