@@ -30,12 +30,12 @@ class Registration < ApplicationRecord
 
   def calculate_amount_paid
     base_price = if event.early_bird_deadline.present? && Time.current <= event.early_bird_deadline
-                   event.early_bird_price
+                   event.early_bird_discount
                  else
                    event.price
                  end
 
-    Rails.logger.debug "Base price: #{base_price}, Event price: #{event.price}, Early bird price: #{event.early_bird_price}"
+    Rails.logger.debug "Base price: #{base_price}, Event price: #{event.price}, Early bird price: #{event.early_bird_discount}"
 
     total = base_price * (number_of_participants || 1)
 
@@ -47,7 +47,7 @@ class Registration < ApplicationRecord
 
       if discount_code.discount_type == 'fixed'
         total -= discount_code.amount if discount_code.amount.to_f.positive?
-      elsif discount_code.discount_type == 'percent' && discount_code.amount.to_f.positive?
+      elsif discount_code.discount_type == 'percentage' && discount_code.amount.to_f.positive?
         total -= total * (discount_code.amount / 100.0)
       end
     end

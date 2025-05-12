@@ -8,8 +8,8 @@ FactoryBot.define do
     discount_code { nil }  # Optional association
 
     after(:build) do |registration|
-      registration.calculate_amount_paid
-    end
+      registration.send(:calculate_amount_paid)
+    end    
 
     after(:create) do |registration|
       registration.create_payment!(

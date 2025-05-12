@@ -1,17 +1,16 @@
 FactoryBot.define do
   factory :participant do
-    association :registration
-
     name { "John Doe" }
-    email { "john.doe@example.com" }
+    email { "john@example.com" }
     phone { "1234567890" }
-    id_proof_type { "Aadhar Card" }
+    id_proof_type { "Aadhar" }
 
-    after(:build) do |participant|
-      participant.uploaded_id.attach(
-        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'dummy_id.png')),
-        filename: 'dummy_id.png',
-        content_type: 'image/png'
+    registration  
+
+    uploaded_id do
+      Rack::Test::UploadedFile.new(
+        Rails.root.join("spec/support/assets/sample.png"),
+        "image/png"
       )
     end
   end

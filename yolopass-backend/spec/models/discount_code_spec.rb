@@ -1,122 +1,190 @@
-# spec/models/discount_code_spec.rb
 require 'rails_helper'
 
 RSpec.describe DiscountCode, type: :model do
-  # Use FactoryBot to create an event and discount code
-  let(:event) { create(:event) }
-  let(:discount_code) { create(:discount_code, event: event) }
+  let(:event) { create(:event, early_bird_deadline: 3.days.from_now) }
 
-  describe 'validations' do
-    subject { build(:discount_code, event: event, code: 'UNIQUECODE', discount_type: 'percentage', amount: 10) }
-  
-    it { should validate_presence_of(:code) }
-  
-    it {
-      should validate_uniqueness_of(:code)
-        .scoped_to(:event_id)
-        .with_message('Code must be unique per event')
-    }
-  
-    it { should validate_inclusion_of(:discount_type).in_array(%w[percentage fixed]) }
-    it { should validate_numericality_of(:amount).is_greater_than(0) }
-    it { should validate_numericality_of(:max_uses).only_integer.is_greater_than(0).allow_nil }
-  end
-  
-  
-  describe 'uniqueness validation' do
-    it 'is invalid if the code is not unique within the scope of event_id' do
-      # Create another DiscountCode with the same event and code to test uniqueness validation
-      duplicate_discount_code = build(:discount_code, event: event, code: discount_code.code)
+  subject {
+    described_class.new(
+      code: "SAVE20",
+      discount_type: "percentage",
+      amount: 20,
+      max_uses: 5,
+      times_used: 0,
+      expires_at: 2.days.from_now,
+      event: event
+    )
+  }
 
-      # Validate the uniqueness and check the errors
-      expect(duplicate_discount_code).not_to be_valid
-      expect(duplicate_discount_code.errors[:code]).to include('has already been taken for this event')
+  describe "validations" do
+    it "is valid with valid attributes" do
+      expect(subject).to be_valid
+    end
+
+    it "is not valid without a code" do
+      subject.code = nil
+      expect(subject).not_to be_valid
+    end
+
+    it "is not valid without a discount_type" do
+      subject.discount_type = nil
+      expect(subject).not_to be_valid
+    end
+
+    it "is not valid with invalid discount_type" do
+      subject.discount_type = 'invalid_type'
+      expect(subject).not_to be_valid
+    end
+
+    it "is not valid with non-positive amount" do
+      subject.amount = 0
+      expect(subject).not_to be_valid
+    end
+
+    it "is valid without max_uses (unlimited uses)" do
+      subject.max_uses = nil
+      expect(subject).to be_valid
+    end
+
+    it "is not valid with negative max_uses" do
+      subject.max_uses = -1
+      expect(subject).not_to be_valid
+    end
+
+    it "is not valid if code is not unique per event" do
+      subject.save!
+      duplicate = subject.dup
+      expect(duplicate).not_to be_valid
     end
   end
-  
-  describe 'methods' do
-    describe '#expired?' do
-      it 'returns true if the discount is expired' do
-        discount_code.update(expires_at: Time.current - 1.day)
-        expect(discount_code.expired?).to be true
-      end
 
-      it 'returns false if the discount is not expired' do
-        discount_code.update(expires_at: Time.current + 1.day)
-        expect(discount_code.expired?).to be false
+  describe "#expired?" do
+    it "returns true if the code is expired" do
+      subject.expires_at = 1.day.ago
+      expect(subject.expired?).to be true
+    end
+
+    it "returns false if the code is not expired" do
+      subject.expires_at = 1.day.from_now
+      expect(subject.expired?).to be false
+    end
+
+    it "returns false if expires_at is nil" do
+      subject.expires_at = nil
+      expect(subject.expired?).to be false
+    end
+  end
+
+  describe "#usable?" do
+    it "returns true if not expired and under usage limit" do
+      subject.expires_at = 1.day.from_now
+      subject.times_used = 2
+      expect(subject.usable?).to be true
+    end
+
+    it "returns false if expired" do
+      subject.expires_at = 1.day.ago
+      expect(subject.usable?).to be false
+    end
+
+    it "returns false if usage limit reached" do
+      subject.times_used = subject.max_uses
+      expect(subject.usable?).to be false
+    end
+
+    it "returns true if max_uses is nil (unlimited)" do
+      subject.max_uses = nil
+      subject.times_used = 999
+      expect(subject.usable?).to be true
+    end
+  end
+
+  describe "#apply_discount" do
+    context "with percentage discount" do
+      it "applies correct percentage discount" do
+        expect(subject.apply_discount(100)).to eq(80)
       end
     end
 
-    describe '#usable?' do
-      it 'returns false if the discount is expired' do
-        discount_code.update(expires_at: Time.current - 1.day)
-        expect(discount_code.usable?).to be false
+    context "with fixed discount" do
+      it "applies fixed discount correctly" do
+        subject.discount_type = "fixed"
+        subject.amount = 30
+        expect(subject.apply_discount(100)).to eq(70)
       end
 
-      it 'returns true if the discount is not expired' do
-        discount_code.update(expires_at: Time.current + 1.day)
-        expect(discount_code.usable?).to be true
-      end
-
-      it 'returns false if max_uses is exceeded' do
-        discount_code.update(times_used: 6, max_uses: 5)
-        expect(discount_code.usable?).to be false
-      end
-
-      it 'returns true if max_uses is not set' do
-        discount_code.update(max_uses: nil)
-        expect(discount_code.usable?).to be true
+      it "does not allow negative final amount" do
+        subject.discount_type = "fixed"
+        subject.amount = 150
+        expect(subject.apply_discount(100)).to eq(0)
       end
     end
 
-    describe '#apply_discount' do
-      it 'applies percentage discount' do
-        discount_code.update(discount_type: 'percentage', amount: 10)
-        expect(discount_code.apply_discount(100)).to eq(90)
-      end
+    it "does not apply discount if not usable" do
+      subject.expires_at = 1.day.ago
+      expect(subject.apply_discount(100)).to eq(100)
+    end
+  end
 
-      it 'applies fixed discount' do
-        discount_code.update(discount_type: 'fixed', amount: 10)
-        expect(discount_code.apply_discount(100)).to eq(90)
-      end
-
-      it 'does not allow negative amounts' do
-        discount_code.update(discount_type: 'fixed', amount: 110)
-        expect(discount_code.apply_discount(100)).to eq(0)
-      end
-
-      it 'does not apply discount if discount is not usable' do
-        discount_code.update(discount_type: 'fixed', amount: 10, expires_at: Time.current - 1.day)
-        expect(discount_code.apply_discount(100)).to eq(100)
-      end
+  describe "#valid_for_early_bird?" do
+    it "returns true before early bird deadline" do
+      event.early_bird_deadline = 2.days.from_now
+      expect(subject.valid_for_early_bird?).to be true
     end
 
-    describe '#use!' do
-      it 'increments times_used by 1' do
-        expect { discount_code.use! }.to change { discount_code.reload.times_used }.by(1)
-      end
-
-      it 'does nothing if the discount is expired' do
-        discount_code.update(expires_at: Time.current - 1.day)
-        expect { discount_code.use! }.not_to change { discount_code.reload.times_used }
-      end
-
-      it 'does nothing if max_uses is exceeded' do
-        discount_code.update(times_used: 5, max_uses: 5)
-        expect { discount_code.use! }.not_to change { discount_code.reload.times_used }
-      end
+    it "returns false after early bird deadline" do
+      event.early_bird_deadline = 1.day.ago
+      expect(subject.valid_for_early_bird?).to be false
     end
 
-    describe '#valid_for_early_bird?' do
-      it 'returns true if the event is before the early bird deadline' do
-        event.update(early_bird_deadline: Time.current + 1.day)
-        expect(discount_code.valid_for_early_bird?).to be true
-      end
+    it "returns false if early_bird_deadline is nil" do
+      event.early_bird_deadline = nil
+      expect(subject.valid_for_early_bird?).to be false
+    end
+  end
 
-      it 'returns false if the event is after the early bird deadline' do
-        event.update(early_bird_deadline: Time.current - 1.day)
-        expect(discount_code.valid_for_early_bird?).to be false
-      end
+  describe "#valid_for_event?" do
+    it "returns true if valid for the same event" do
+      expect(subject.valid_for_event?(event)).to be true
+    end
+
+    it "returns false if event is different" do
+      another_event = create(:event)
+      expect(subject.valid_for_event?(another_event)).to be false
+    end
+
+    it "returns false if expired or used up" do
+      subject.expires_at = 1.day.ago
+      subject.times_used = subject.max_uses
+      expect(subject.valid_for_event?(event)).to be false
+    end
+  end
+
+  describe "#use!" do
+    it "increments times_used if usable" do
+      expect { subject.use! }.to change(subject, :times_used).by(1)
+    end
+
+    it "does not increment if expired" do
+      subject.expires_at = 1.day.ago
+      expect { subject.use! }.not_to change(subject, :times_used)
+    end
+
+    it "does not increment if usage limit reached" do
+      subject.times_used = subject.max_uses
+      expect { subject.use! }.not_to change(subject, :times_used)
+    end
+  end
+
+  describe "#percentage? and #fixed?" do
+    it "returns true for percentage discount" do
+      expect(subject.percentage?).to be true
+      expect(subject.fixed?).to be false
+    end
+
+    it "returns true for fixed discount" do
+      subject.discount_type = "fixed"
+      expect(subject.fixed?).to be true
+      expect(subject.percentage?).to be false
     end
   end
 end

@@ -58,7 +58,7 @@ end
       allow_any_instance_of(DiscountCode).to receive(:usable?).and_return(true)
 
       registration = build(:registration, event: event, number_of_participants: 1, discount_code: discount)
-      registration.calculate_amount_paid
+      registration.send(:calculate_amount_paid)
       expect(registration.amount_paid).to eq(400)  # 500 - 100 discount
     end
 
