@@ -69,7 +69,6 @@ RSpec.configure do |config|
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
   RSpec.configure do |config|
-    config.include ControllerHelpers, type: :controller
     config.include FactoryBot::Syntax::Methods
   end
   Shoulda::Matchers.configure do |config|

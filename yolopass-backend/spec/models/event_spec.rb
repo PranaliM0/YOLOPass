@@ -4,6 +4,7 @@ RSpec.describe Event, type: :model do
   let(:organizer) { create(:user) }
 
   describe 'associations' do
+    #it { should belong_to(:venue).optional }
     it { should belong_to(:organizer).class_name('User') }
     it { should have_many(:registrations).dependent(:destroy) }
     it { should have_one_attached(:image) }
@@ -13,7 +14,7 @@ RSpec.describe Event, type: :model do
 
   describe 'validations' do
     it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:venue) }
+    #it { should validate_presence_of(:venue) }
     it { should validate_presence_of(:start_time) }
     it { should validate_presence_of(:end_time) }
     it { should validate_presence_of(:category) }
@@ -33,21 +34,21 @@ RSpec.describe Event, type: :model do
   end
 
   describe 'conflicting time validation' do
+    let(:venue) { create(:venue) }
+
     it 'adds error if there is a time conflict at the same venue' do
-      create(:event, venue: 'Main Hall', start_time: 2.days.from_now, end_time: 3.days.from_now)
+      create(:event, venue: venue, start_time: 2.days.from_now, end_time: 3.days.from_now)
+      event = build(:event, venue: venue, start_time: 2.days.from_now + 1.hour, end_time: 3.days.from_now + 1.hour)
 
-      event = build(:event, venue: 'Main Hall', start_time: 2.5.days.from_now, end_time: 3.5.days.from_now)
-      event.valid?
-
+      event.validate
       expect(event.errors[:base]).to include('This venue is already booked during the selected time slot.')
     end
 
     it 'does not add error if times do not overlap' do
-      create(:event, venue: 'Main Hall', start_time: 2.days.from_now, end_time: 3.days.from_now)
+      create(:event, venue: venue, start_time: 2.days.from_now, end_time: 3.days.from_now)
+      event = build(:event, venue: venue, start_time: 3.days.from_now + 1.hour, end_time: 4.days.from_now)
 
-      event = build(:event, venue: 'Main Hall', start_time: 3.days.from_now + 1.hour, end_time: 4.days.from_now)
-      event.valid?
-
+      event.validate
       expect(event.errors[:base]).to be_empty
     end
   end

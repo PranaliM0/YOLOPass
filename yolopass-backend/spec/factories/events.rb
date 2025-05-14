@@ -10,10 +10,10 @@ FactoryBot.define do
     early_bird_discount { 20 }
     early_bird_deadline { 1.day.from_now }
 
-    association :organizer, factory: :user  # Correct association
-
+    association :organizer, factory: :user  
     trait :with_organizer do
       association :organizer, factory: :user
+      association :venue, factory: :venue 
     end
   end
 end

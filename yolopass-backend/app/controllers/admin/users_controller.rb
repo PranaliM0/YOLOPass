@@ -5,7 +5,7 @@ module Admin
     load_and_authorize_resource
 
     def index
-      users = User.all
+      users = User.where.not(role: :admin) # Exclude admin users
       render json: users, each_serializer: UserSerializer
     end
 
@@ -20,14 +20,13 @@ module Admin
       registered_user_ids = Registration.select(:user_id).distinct.pluck(:user_id)
       users = User.where(role: 'attendee')
                   .where.not(id: registered_user_ids)
-
+      #byebug
       render json: users, each_serializer: UserSerializer
     end
-
+   # byebug
     # Cannot delete admin
     def destroy
       user = User.find(params[:id])
-
       if user.admin?
         render json: { error: I18n.t('admin.users.destroy.success') }, status: :unprocessable_entity
       else

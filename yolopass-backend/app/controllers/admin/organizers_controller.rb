@@ -2,7 +2,7 @@
 
 module Admin
   class OrganizersController < ApplicationController
-    load_and_authorize_resource
+    load_and_authorize_resource except: :destroy
 
     # GET /admin/organizers
     def index
