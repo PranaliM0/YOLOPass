@@ -21,7 +21,7 @@ module Admin
       if venue.save
         render json: venue, status: :created
       else
-        render json: { errors: t('admin.venues.create.venue_not_created') },
+        render json: { errors: I18n.t('admin.venues.create.venue_not_created') },
                status: :unprocessable_entity
       end
     end

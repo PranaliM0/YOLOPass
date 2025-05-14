@@ -2,7 +2,7 @@
 
 module Admin
   class EventsController < ApplicationController
-    load_and_authorize_resource
+    load_and_authorize_resource except: :destroy
 
     # GET /admin/events
     def index
