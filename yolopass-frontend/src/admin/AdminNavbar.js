@@ -1,23 +1,30 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/AdminStyles.css";
+// src/admin/AdminNavbar.js
+import React from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/AdminStyles.css';
 
 const AdminNavbar = () => {
-  const navigate = useNavigate();
-
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    localStorage.removeItem('token');
+    window.location.href = '/login'; // Redirect to login
   };
 
   return (
     <nav className="admin-navbar">
-      <div className="navbar-content">
-        <h2>🛡️ YOLOPass Admin</h2>
-        <button className="logout-button" onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
+      <ul>
+        <li>
+          <Link to="/admin/dashboard">Dashboard</Link>
+        </li>
+        <li>
+          <Link to="/admin/organizers">Organizers</Link>
+        </li>
+        <li>
+          <Link to="/admin/events">Events</Link>
+        </li>
+        <li>
+          <button onClick={handleLogout} className="logout-btn">Logout</button>
+        </li>
+      </ul>
     </nav>
   );
 };

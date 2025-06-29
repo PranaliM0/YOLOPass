@@ -1,0 +1,196 @@
+/* Basic Styles */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  scroll-behavior: smooth; 
+}
+
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-left {
+  font-size: 24px;
+  font-weight: bold;
+  color: #6c3e9a;
+}
+
+.navbar-right {
+  display: flex;
+  gap: 60px;
+}
+
+.navbar-right a {
+  color: #6c3e9a;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.get-started-btn {
+  padding: 10px 20px;
+  background-color: #7e4fcf;
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.get-started-btn:hover {
+  background-color: #a5a5ea;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 100px 0;
+  background-image: url('/home/dell/Desktop/YOLOPass/image/event_management.jpg'); 
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+.hero-section h1 {
+  font-size: 40px;
+  color: #581378;
+}
+
+.hero-section p {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #4572f7;
+  font-weight: bold;
+}
+
+/* Space between heading and button */
+.hero-section button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #6c3e9a;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+.hero-section button:hover {
+  background-color: #7f4cbf;
+}
+
+.events-section {
+  padding: 50px 20px;
+  background-color: #fff;
+}
+
+.events-section h2 {
+  font-size: 28px;
+  color: #6c3e9a;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.event-cards {
+  display: flex;
+  justify-content: space-between; /* Space between the cards */
+  gap: 20px; /* Adds space between the cards */
+}
+
+.event-card {
+  width: 23%; /* Adjust to fit 4 cards on the same line (100% / 4 = 25%, minus gap) */
+  height: 400px; /* Adjust height as needed */
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column; /* Stack content vertically within each card */
+  justify-content: space-between;
+}
+
+.event-card img {
+  width: 100%;
+  height: 200px; /* Adjust the height for the image */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.event-card h3 {
+  font-size: 20px;
+  color: #333;
+  margin-top: 10px;
+}
+
+.event-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 10px 0;
+}
+
+.event-card button {
+  padding: 8px 15px;
+  background-color: #6c3e9a;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+}
+
+.event-card button:hover {
+  background-color: #7f4cbf;
+}
+
+.about-section {
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.about-section h2 {
+  font-size: 28px;
+  color: #6c3e9a;
+}
+
+.about-section p {
+  font-size: 18px;
+  color: #555;
+  margin-top: 10px;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 20px;
+  background-color: #6c3e9a;
+  color: white;
+  text-align: center;
+}
+
+.footer .social-media a {
+  margin: 0 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.footer .social-media a:hover {
+  text-decoration: underline;
+}

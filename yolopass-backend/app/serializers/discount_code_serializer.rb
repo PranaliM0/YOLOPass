@@ -1,3 +1,3 @@
 class DiscountCodeSerializer < ActiveModel::Serializer
-  attributes :code, :discount_percentage
+  attributes :code, :discount_type
 end

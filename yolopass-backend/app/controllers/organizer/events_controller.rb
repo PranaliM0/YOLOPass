@@ -61,8 +61,13 @@ module Organizer
 
     private
 
+    private
+
     def set_event
-      @event = Event.find(params[:id])
+      @event = Event.find_by(id: params[:id])
+      return if @event.present?
+
+      render json: { error: I18n.t('organizer.events.event_details.not_found') }, status: :not_found
     end
 
     def event_params

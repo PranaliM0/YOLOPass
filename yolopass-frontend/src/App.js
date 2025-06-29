@@ -9,22 +9,36 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from './admin/AdminDashboard';
 import OrganizerDashboard from './organizer/OrganizerDashboard';
 import AttendeeDashboard from './attendee/AttendeeDashboard';
-import AdminOrganizerList from './admin/AdminOrganizerList';
 
 // Organizer Components
 import EventList from './organizer/EventList';
 import CreateEvent from './organizer/CreateEvent';
 import OrganizerProfile from './organizer/OrganizerProfile';
 import EditEvent from './organizer/EditEvent';
+import CreateDiscountCode from './organizer/CreateDiscountCode'
 
+// Attendee Components
+import AttendeeProfile from './attendee/AttendeeProfile';
+import AttendeeEventDetails from './attendee/AttendeeEventDetails';
+import RegistrationReview from './attendee/RegistrationReview';
+import EventRegistration from "./attendee/EventRegistration";
+import CartPage from "./attendee/CartPage";
 
+// Homepage Component
+import Homepage from './components/Homepage'; // Adjust the path if needed
+
+//Admin Components
+import VenueManagement from './admin/VenueManagement';
+import ViewOrganizers from "./admin/ViewOrganizers";
+import ViewEvents from "./admin/ViewEvents";
+import ViewUsers from "./admin/ViewUsers";
 
 function App() {
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Signup />} />
+        <Route path="/" element={<Homepage />} /> {/* Add Homepage Route */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
@@ -37,7 +51,38 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/admin/venues"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <VenueManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/organizers"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <ViewOrganizers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/events"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <ViewEvents />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <ViewUsers />
+            </ProtectedRoute>
+          }
+        />
         {/* Organizer Dashboard & Event Routes */}
         <Route
           path="/organizer-dashboard"
@@ -79,12 +124,61 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/organizer/create-discount-code/:event_id"
+          element={
+            <ProtectedRoute allowedRoles={["organizer"]}>
+              <CreateDiscountCode />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Attendee Dashboard */}
         <Route
           path="/attendee-dashboard"
           element={
             <ProtectedRoute allowedRoles={["attendee"]}>
               <AttendeeDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendee/register"
+          element={
+            <ProtectedRoute allowedRoles={["attendee"]}>
+              <EventRegistration />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="attendee/profile"
+          element={
+            <ProtectedRoute allowedRoles={["attendee"]}>
+              <AttendeeProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendee/events/:eventId"
+          element={
+            <ProtectedRoute allowedRoles={["attendee"]}>
+              <AttendeeEventDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendee/review/:registrationId" 
+          element={
+            <ProtectedRoute allowedRoles={["attendee"]}>
+              <RegistrationReview />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendee/cart" 
+          element={
+            <ProtectedRoute allowedRoles={["attendee"]}>
+              <CartPage />
             </ProtectedRoute>
           }
         />

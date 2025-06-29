@@ -1,0 +1,105 @@
+/* EventDetails.css */
+
+.event-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.event-details-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  max-height: 400px;
+  margin-bottom: 20px;
+}
+
+.event-details-info {
+  font-size: 1.2rem;
+  color: #444;
+}
+
+.event-details-info p {
+  margin-bottom: 15px;
+}
+
+.event-details-info strong {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.register-button {
+  background-color: #27ae60;
+  color: white;
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.register-button:hover {
+  background-color: #2ecc71;
+}
+
+.event-registration-form {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-registration-form input,
+.event-registration-form select,
+.event-registration-form button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.event-registration-form button {
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+}
+
+.event-registration-form button:hover {
+  background-color: #2980b9;
+}
+
+@media (max-width: 768px) {
+  .event-details-container {
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .event-details-info {
+    font-size: 1rem;
+  }
+
+  .register-button {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+}

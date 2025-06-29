@@ -1,56 +1,128 @@
+/* Overall container for the event list page */
 .event-list-container {
-  padding: 20px;
-  max-width: 900px;
+  padding: 30px;
+  max-width: 1200px;
   margin: auto;
+  background-color: #f4f7fc;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 .create-event-btn {
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
-  padding: 8px 16px;
-  margin-bottom: 20px;
+  padding: 12px 20px;
+  margin-bottom: 30px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 1.1rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.create-event-btn:hover {
+  background-color: #218838;
 }
 
 .events {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
 }
 
 .event-card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 16px;
-  background-color: #f9f9f9;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin: 15px;
+  width: 300px; /* Adjust width of the card */
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  justify-content: space-between;
+  position: relative; /* Required for absolute positioning of buttons */
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+  max-height: 500px; /* Set a max height for the card */
+  overflow: hidden; /* Prevent content overflow */
+}
+
+.event-image {
+  width: 100%; /* Take full width of the card */
+  height: 200px; /* Set fixed height */
+  object-fit: cover; /* Ensures the image doesn't stretch and fills the container */
+  border-radius: 8px;
+  margin-bottom: 15px; /* Space below the image */
+}
+
+.event-details {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.event-description {
+  max-height: 150px; /* Limit description height */
+  overflow-y: auto; /* Scrollable description if it's too long */
+  margin-bottom: 15px; /* Space after the description */
 }
 
 .event-buttons {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  justify-content: space-between;
+  margin-top: 15px;
+  opacity: 0; /* Buttons are initially invisible */
+  transition: opacity 0.3s ease; /* Smooth transition for opacity change */
+  position: absolute;
+  bottom: 15px; /* Position the buttons at the bottom of the card */
+  left: 15px;
+  right: 15px;
 }
 
-.btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
+.event-card:hover .event-buttons {
+  opacity: 1; /* Show the buttons when the card is hovered */
+}
+
+.event-buttons .btn {
+  padding: 12px 18px;
+  font-size: 15px;
   cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: all 0.3s ease; /* Smooth transition for button changes */
 }
 
-.view-btn {
-  background-color: #17a2b8;
+.event-buttons .btn:hover {
+  transform: scale(1.05); /* Slightly scale the button when hovered */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow on hover for richness */
+}
+
+.event-buttons .btn.discount-btn {
+  background: linear-gradient(135deg, #ffd700, #ffcc00); /* Gold gradient for rich look */
   color: white;
 }
 
-.edit-btn {
-  background-color: #ffc107;
-  color: black;
+.event-buttons .btn.view-btn {
+  background: linear-gradient(135deg, #2c3e50, #34495e); /* Deep blue gradient */
+  color: white;
 }
 
-.delete-btn {
-  background-color: #dc3545;
+.event-buttons .btn.edit-btn {
+  background: linear-gradient(135deg, #e67e22, #f39c12); /* Orange gradient */
+  color: white;
+}
+
+.event-buttons .btn.delete-btn {
+  background: linear-gradient(135deg, #e74c3c, #c0392b); /* Red gradient */
   color: white;
 }

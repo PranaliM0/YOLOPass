@@ -1,51 +1,41 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import AdminNavbar from "./AdminNavbar";
-import '../styles/AdminStyles.css';
+// src/admin/AdminDashboard.js
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/AdminDashboard.css";
 
-const Dashboard = () => {
-  const [stats, setStats] = useState({});
+const AdminDashboard = () => {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3001/admin/stats", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setStats(response.data);
-      } catch (err) {
-        console.error("Failed to fetch admin stats", err);
-      }
-    };
-
-    fetchStats();
-  }, []);
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
   return (
-    <div>
-      <AdminNavbar />
-      <div className="dashboard-wrapper">
-        <h1 className="dashboard-title">Admin Dashboard</h1>
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>Total Users</h3>
-            <p>{stats.total_users || 0}</p>
-          </div>
-          <div className="stat-card">
-            <h3>Total Organizers</h3>
-            <p>{stats.total_organizers || 0}</p>
-          </div>
-          <div className="stat-card">
-            <h3>Total Events</h3>
-            <p>{stats.total_events || 0}</p>
-          </div>
+    <div className="admin-dashboard">
+      <nav className="admin-navbar">
+        <h2>Admin Dashboard</h2>
+        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+      </nav>
+
+      <div className="card-container">
+        <div className="admin-card" onClick={() => navigate("/admin/organizers")}>
+          <h3>View Organizers</h3>
+        </div>
+        <div className="admin-card" onClick={() => navigate("/admin/events")}>
+          <h3>View Events</h3>
+        </div>
+        <div className="admin-card" onClick={() => navigate("/admin/users")}>
+          <h3>View Users</h3>
+        </div>
+        
+        {/* 🆕 Add this card for Venue Management */}
+        <div className="admin-card" onClick={() => navigate("/admin/venues")}>
+          <h3>Manage Venues</h3>
         </div>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

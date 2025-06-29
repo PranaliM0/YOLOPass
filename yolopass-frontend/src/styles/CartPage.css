@@ -1,0 +1,34 @@
+.cart-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .registration-card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px 0;
+    background-color: #f9f9f9;
+  }
+  
+  .review-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .review-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .review-box {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #e6f3ff;
+    border-left: 4px solid #007bff;
+  }
+  

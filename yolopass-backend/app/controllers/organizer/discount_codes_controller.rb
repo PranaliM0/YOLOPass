@@ -29,6 +29,7 @@ module Organizer
 
       if @discount_code.save
         render json: { message: I18n.t('organizer.discount_codes.create.success') }, status: :created
+        byebug
       else
         render json: { errors: @discount_code.errors.full_messages }, status: :unprocessable_entity
       end

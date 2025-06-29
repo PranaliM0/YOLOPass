@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import '../styles/CreateEvent.css';
 
 const CreateEvent = () => {
   const [eventData, setEventData] = useState({
@@ -16,15 +17,58 @@ const CreateEvent = () => {
     early_bird_deadline: '',
     max_participants: '',
     id_proof_required: false,
+    image: null
   });
+
+  const [availableVenues, setAvailableVenues] = useState([]);
+  const [selectedVenueCapacity, setSelectedVenueCapacity] = useState(null);
+
   const navigate = useNavigate();
 
+  const fetchAvailableVenues = async (start_time, end_time) => {
+    try {
+      const response = await axios.get('http://localhost:3001/organizer/available_venues', {
+        params: {
+          start_time,
+          end_time
+        },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      });
+      setAvailableVenues(response.data); 
+    } catch (error) {
+      console.error('Error fetching available venues:', error);
+    }
+  };
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEventData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    const { name, value, files } = e.target;
+
+    if (name === 'image') {
+      setEventData(prevState => ({
+        ...prevState,
+        image: files[0],
+      }));
+    } else if (name === 'venue') {
+      const selectedVenue = availableVenues.find(v => v.name === value);
+      setSelectedVenueCapacity(selectedVenue?.capacity || null);
+
+      setEventData(prevState => ({
+        ...prevState,
+        venue: value,
+      }));
+    } else {
+      const updatedEventData = {
+        ...eventData,
+        [name]: value,
+      };
+      setEventData(updatedEventData);
+
+      if ((name === 'start_time' || name === 'end_time') && updatedEventData.start_time && updatedEventData.end_time) {
+        fetchAvailableVenues(updatedEventData.start_time, updatedEventData.end_time);
+      }
+    }
   };
 
   const handleCheckboxChange = (e) => {
@@ -37,17 +81,32 @@ const CreateEvent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:3001/organizer/events', { event: eventData }, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    if (
+      selectedVenueCapacity &&
+      parseInt(eventData.max_participants) > selectedVenueCapacity
+    ) {
+      alert(`Max participants cannot exceed venue capacity of ${selectedVenueCapacity}`);
+      return;
+    }
+
+    const formData = new FormData();
+    for (let key in eventData) {
+      formData.append(`event[${key}]`, eventData[key]);
+    }
+
+    axios.post('http://localhost:3001/organizer/events', formData, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'multipart/form-data'
+      }
     })
     .then(response => {
       alert("Event created successfully!");
-      navigate('/events'); // correct redirect
+      navigate('/events');
     })
-    
-      .catch(error => {
-        console.error('There was an error creating the event!', error);
-      });
+    .catch(error => {
+      console.error('There was an error creating the event!', error);
+    });
   };
 
   return (
@@ -76,17 +135,6 @@ const CreateEvent = () => {
         </label>
 
         <label>
-          Venue:
-          <input 
-            type="text" 
-            name="venue" 
-            value={eventData.venue} 
-            onChange={handleChange} 
-            required
-          />
-        </label>
-
-        <label>
           Start Time:
           <input 
             type="datetime-local" 
@@ -106,6 +154,24 @@ const CreateEvent = () => {
             onChange={handleChange} 
             required
           />
+        </label>
+
+        <label>
+          Venue:
+          <select 
+            name="venue" 
+            value={eventData.venue} 
+            onChange={handleChange} 
+            required
+            disabled={availableVenues.length === 0}
+          >
+            <option value="">Select a venue</option>
+            {availableVenues.map(venue => (
+              <option key={venue.id} value={venue.name}>
+                {venue.name} (Capacity: {venue.capacity})
+              </option>
+            ))}
+          </select>
         </label>
 
         <label>
@@ -140,7 +206,7 @@ const CreateEvent = () => {
         </label>
 
         <label>
-          Early Bird Discount(%):
+          Early Bird Discount (%):
           <input 
             type="number" 
             name="early_bird_discount" 
@@ -148,7 +214,6 @@ const CreateEvent = () => {
             onChange={handleChange} 
             step="0.01"
           />
-
         </label>
 
         <label>
@@ -179,6 +244,17 @@ const CreateEvent = () => {
             name="id_proof_required" 
             checked={eventData.id_proof_required} 
             onChange={handleCheckboxChange}
+          />
+        </label>
+
+        <label>
+          Event Image:
+          <input 
+            type="file" 
+            name="image" 
+            accept="image/*"
+            onChange={handleChange} 
+            required
           />
         </label>
 

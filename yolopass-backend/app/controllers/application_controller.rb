@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   include Rails.application.routes.url_helpers
-
+ 
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from CanCan::AccessDenied do |_exception|
     render json: { error: I18n.t('application.access_denied') }, status: :forbidden
   end
@@ -31,5 +32,9 @@ class ApplicationController < ActionController::API
     HashWithIndifferentAccess.new(decoded)
   rescue JWT::DecodeError, JWT::ExpiredSignature
     nil
+  end
+
+  def record_not_found
+    render json: { error: I18n.t('errors.not_found') }, status: :not_found
   end
 end

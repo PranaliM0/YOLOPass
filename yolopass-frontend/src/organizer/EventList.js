@@ -27,6 +27,11 @@ const EventList = () => {
     navigate('/organizer/create-event');
   };
 
+  // New function to navigate to discount code creation page
+  const handleCreateDiscountCode = (eventId) => {
+    navigate(`/organizer/create-discount-code/${eventId}`);
+  };
+
   const handleEdit = (eventId) => {
     navigate(`/organizer/edit-event/${eventId}`);
   };
@@ -62,6 +67,11 @@ const EventList = () => {
         {events.length > 0 ? (
           events.map(event => (
             <div key={event.id} className="event-card">
+              {/* Event Image (Poster) */}
+              {event.image_url && (
+                <img src={event.image_url} alt={event.name} className="event-image" />
+              )}
+
               <h3>{event.name}</h3>
               <p><strong>Venue:</strong> {event.venue}</p>
               <p><strong>Start Time:</strong> {new Date(event.start_time).toLocaleString()}</p>
@@ -74,6 +84,11 @@ const EventList = () => {
                 </button>
                 <button className="btn edit-btn" onClick={() => handleEdit(event.id)}>Edit</button>
                 <button className="btn delete-btn" onClick={() => handleDelete(event.id)}>Delete</button>
+
+                {/* Button for creating discount code */}
+                <button className="btn discount-btn" onClick={() => handleCreateDiscountCode(event.id)}>
+                  Create Discount Code
+                </button>
               </div>
 
               {visibleDescriptions[event.id] && (

@@ -1,0 +1,44 @@
+.review-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+  }
+  
+  .review-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .review-container ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .review-container li {
+    margin-bottom: 10px;
+    padding: 8px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .pay-button {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .pay-button:hover {
+    background-color: #218838;
+  }
+  

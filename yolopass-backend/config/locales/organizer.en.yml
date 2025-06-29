@@ -1,0 +1,28 @@
+en:
+  organizer:
+    discount_codes:
+      index:
+        missing_event_id: "Event ID is missing."
+      create:
+        event_not_found: "Event not found."
+        success: "Discount code created successfully."
+      show:
+        not_found: "Not Found"
+      update:
+        not_updated: "Discount code is not updated."
+      set:
+        not_found: "Discount code not found for this event."
+
+    events:
+      event_details:
+        not_found: "Not Found"
+      destroy:
+        not_deleted: "Not Found" #"Event deletion failed."
+
+    organizers:
+      profile:
+        not_authorized: "organizer not authorized."
+
+    venues:
+      available:
+        time_required: "Start time and end time are required."

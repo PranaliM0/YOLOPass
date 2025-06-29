@@ -1,0 +1,70 @@
+/* AdminDashboard.css */
+
+/* body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #e0e7ff, #f0fdf4);
+  min-height: 100vh;
+} */
+
+.admin-dashboard {
+  padding: 40px;
+}
+
+.admin-navbar {
+  background: rgba(43, 47, 54, 0.85);
+  color: #ffffff;
+  padding: 20px 30px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.logout-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 10px 5px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #059669;
+}
+
+.card-container {
+  margin-top: 40px;
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.admin-card {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 18px;
+  padding: 40px 20px;
+  text-align: center;
+  color: #1f2937;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+
+.admin-card:hover {
+  transform: scale(1.03);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.admin-card h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}

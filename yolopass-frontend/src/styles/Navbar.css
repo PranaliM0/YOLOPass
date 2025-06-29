@@ -1,0 +1,25 @@
+/* Navbar.css */
+.simple-navbar {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 60px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .simple-navbar a {
+    color: #390763; /* purple */
+    text-decoration: none;
+    margin-left: 40px;
+    font-weight: 900;
+  }
+  
+  .simple-navbar a:hover {
+    color: #100227; /* darker purple */
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
